@@ -7,7 +7,11 @@
 
 ## Quickstart
     Dorna Robot: 
-    rosluanch dorna_moveit_config dorna_real_planning_execution.launch
+    roslaunch dorna_moveit_config dorna_real_planning_execution.launch
 
     Dorna Gazebo:
     roslaunch dorna_moveit_config dorna_planning_execution.launch
+
+
+oooooohh. Run this instead:
+roslaunch dorna_moveit_config demo.launch

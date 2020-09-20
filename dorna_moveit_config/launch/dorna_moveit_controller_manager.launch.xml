@@ -4,6 +4,6 @@
     <!-- <param name="moveit_controller_manager" value="moveit_fake_controller_manager/MoveItFakeControllerManager"/> -->
     
     <!-- load controller_list -->
-    <rosparam file="$(find dorna_moveit_config)/config/controllers.yaml"/>
-    <!-- <rosparam file="$(find dorna_moveit_config)/config/fake_controllers.yaml"/> -->
+    <!-- <rosparam file="$(find dorna_moveit_config)/config/controllers.yaml"/> -->
+    <rosparam file="$(find dorna_moveit_config)/config/fake_controllers.yaml"/>
 </launch>
