@@ -26,7 +26,9 @@ logger.addHandler(stream_handler)
 ################################
 class DornaRobot:
     def __init__(self):
-        self._config_path = os.path.dirname(os.path.realpath(__file__))+str("/config.yaml")
+        # self._config_path = os.path.dirname(os.path.realpath(__file__)) + str("/config.yaml")
+        self._config_path = os.path.dirname(os.path.realpath(__file__)) + str("/myconfig.json")
+
         self.params = list(yaml.safe_load(open(self._config_path, 'r')).keys())
         self.joint_names = ['j0', 'j1', 'j2', 'j3', 'j4']
         self.axis_names = ['x', 'y', 'z', 'a', 'b']

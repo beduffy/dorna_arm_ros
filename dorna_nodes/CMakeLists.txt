@@ -9,7 +9,6 @@ add_compile_options(-Wall -Wextra -O3 -g)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
   dorna_ros
-  gazebo_ros
   geometry_msgs
   moveit_core
   moveit_msgs

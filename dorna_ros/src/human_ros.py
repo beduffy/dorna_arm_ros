@@ -9,7 +9,7 @@ from dorna_enums import HumanResponse, DornaMovement
 
 from trajectory_msgs.msg import JointTrajectory, JointTrajectoryPoint
 from moveit_msgs.msg import RobotState, RobotTrajectory, DisplayTrajectory, CollisionObject
-from dorna_api.msg import DornaPos, DornaJoint, DornaLimits, DornaHomed, DornaToolHead, DornaSpeed, DornaJerk
+from dorna_ros.msg import DornaPos, DornaJoint, DornaLimits, DornaHomed, DornaToolHead, DornaSpeed, DornaJerk
 from pix_2_world.msg import ButtonsPix, ButtonsWorld, Pix, World
 from std_msgs.msg import Float64, Int32, Bool, Header, String, Empty
 

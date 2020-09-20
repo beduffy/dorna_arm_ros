@@ -100,7 +100,8 @@ class DornaRos:
             self.publisher_thread.start()
             rospy.loginfo('Starting Publisher thread')
 
-        if self.toolhead_thread not in current_threads and self._tool_head is not None:
+        #if self.toolhead_thread not in current_threads and self._tool_head is not None:
+        if self._tool_head is not None:
             self.toolhead_thread.start()
             rospy.loginfo('Starting Hand sensor thread')
 
@@ -116,6 +117,7 @@ class DornaRos:
         rospy.loginfo_once("Starting publisher Thread")
         try:
             while not rospy.is_shutdown() and self.connection_status:
+                # print('Publish')
                 self.connection_status = self._robot.get_connection_status()
                 self.publish()
                 self._ros_rate.sleep()
@@ -349,7 +351,9 @@ class DornaRos:
         return True
 
     def jog_srv_callback(self, req):
+        # rosservice call /dorna/robot_cmd/jog '{path: "joint", axis: "j0", step_size: 5}'
         rospy.loginfo("[Service Callback] Jog")
+        print(req)
         self._robot.jog(req.path, {req.axis: req.step_size})
         return True
         
@@ -378,6 +382,11 @@ class DornaRos:
     
     def xyz_to_joint_srv_callback(self, req):
         #TODO: make this better
+        # to call: 
+        # rosservice call /dorna/robot_cmd/xyz_to_joint '{xyz: [69.2624134452, -8.50435502194, 523.590043535]}'
+        # rostopic echo /dorna/robot_info/cartesian_position
+        # rostopic echo /dorna/robot_info/joint_angles
+        # 
         rospy.loginfo("[Service Callback] xyz_to_joint")
         xyzab = [req.xyz[0], req.xyz[1], req.xyz[2], 0, 0]
         joint_angles = self._robot.xyz_to_joint(xyzab)
@@ -396,14 +405,32 @@ class DornaRos:
 
     def move_joints_srv_callback(self, req):
         #TODO: make this better
+        # call: rosservice call /dorna/robot_cmd/move_joints '{path: 'joint', movement: 1, speed: 500, joint_angles: [-0.0, 145.0, -90, 0, 0]}'
+        # rosservice call /dorna/robot_cmd/move_joints '{path: 'joint', movement: 0, speed: 500, joint_angles: [0.8409, 135.001, -86.18952, 0, 0]}'
+        # todo print current joint position and end joint position and understand how it is inverted
         rospy.loginfo("[Service Callback] move_joint")
         path = str(req.path)
         movement = req.movement
         speed = req.speed
         joint_angles = list(req.joint_angles)
-        fulfill = req.fulfill
+        #fulfill = req.fulfill
+        fulfill = True
+
+        # todo is j0, j1 outside joints: [] gonna affect things?
+
+        joint = self._robot.get_joint_angles()
+
+        joint_msg = DornaJoint()
+        joint_msg.j0 = joint[0]
+        joint_msg.j1 = joint[1]
+        joint_msg.j2 = joint[2]
+        joint_msg.j3 = joint[3]
+        joint_msg.j4 = joint[4] 
+        print(joint_msg)
+
         self._robot.move_joints(path, movement, speed, joint_angles, fulfill)
         if fulfill:
+            print('Doing fulfill')
             if movement:
                 desired = [x+y for x,y in zip(self._robot.get_joint_angles(), joint_angles)]
             else: 
@@ -414,6 +441,7 @@ class DornaRos:
 
     def move_xyzab_srv_callback(self, req):
         #TODO: make this better
+        # rosservice call /dorna/robot_cmd/move_xyzab '{path: 'joint', movement: 0, speed: 500, xyzab: [80.8362005667, 8.26934552121, 497.648694867, 48.81148, 0], fulfill: 1}'
         rospy.loginfo("[Service Callback] move_xyzab")
         path = req.path
         movement = req.movement
@@ -478,7 +506,9 @@ if __name__ == "__main__":
     rospy.init_node('dorna')
     rospy.loginfo('Starting node "dorna"')
     robot = DornaRos()
+    print('Finished creating DornaRos object')
     init = False
+    init = True
     try:
         if init:
             robot.init()
