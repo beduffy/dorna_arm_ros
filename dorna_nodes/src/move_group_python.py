@@ -42,7 +42,7 @@
 ##
 
 import sys
-# import copy
+import copy
 import rospy
 import moveit_commander
 import moveit_msgs.msg
@@ -81,7 +81,6 @@ class MoveGroupPythonIntefaceTutorial(object):
   def __init__(self):
     super(MoveGroupPythonIntefaceTutorial, self).__init__()
 
-    import pdb;pdb.set_trace()
     ## BEGIN_SUB_TUTORIAL setup
     ##
     ## First initialize `moveit_commander`_ and a `rospy`_ node:
@@ -162,14 +161,16 @@ class MoveGroupPythonIntefaceTutorial(object):
     ## The Panda's zero configuration is at a `singularity <https://www.quora.com/Robotics-What-is-meant-by-kinematic-singularity>`_ so the first
     ## thing we want to do is move it to a slightly better configuration.
     # We can get the joint values from the group and adjust some of the values:
+    
+    # import pdb;pdb.set_trace()
     joint_goal = move_group.get_current_joint_values()
     joint_goal[0] = 0
     joint_goal[1] = -pi/4
     joint_goal[2] = 0
     joint_goal[3] = -pi/2
     joint_goal[4] = 0
-    joint_goal[5] = pi/3
-    joint_goal[6] = 0
+    # joint_goal[5] = pi/3
+    # joint_goal[6] = 0
 
     # The go command can be called with joint values, poses, or without any
     # parameters if you have already set the pose or joint target for the group
@@ -177,6 +178,8 @@ class MoveGroupPythonIntefaceTutorial(object):
 
     # Calling ``stop()`` ensures that there is no residual movement
     move_group.stop()
+
+    # TODO: this did not move the 
 
     ## END_SUB_TUTORIAL
 
@@ -197,13 +200,32 @@ class MoveGroupPythonIntefaceTutorial(object):
     ## ^^^^^^^^^^^^^^^^^^^^^^^
     ## We can plan a motion for this group to a desired pose for the
     ## end-effector:
+    
+    print('Current joint values: \n', move_group.get_current_joint_values())
+    print('self.move_group.get_current_pose().pose\n', self.move_group.get_current_pose().pose)
     pose_goal = geometry_msgs.msg.Pose()
     pose_goal.orientation.w = 1.0
-    pose_goal.position.x = 0.4
-    pose_goal.position.y = 0.1
-    pose_goal.position.z = 0.4
+    pose_goal.position.x = 0.324255627929
+    pose_goal.position.y = -9.66761901718e-06
+    pose_goal.position.z = -0.0677773038967
 
-    move_group.set_pose_target(pose_goal)
+    # TODO: [ INFO] [1600618383.055231225]: ABORTED: No motion plan found. No execution attempted. 
+    # WHY?
+
+    # position: 
+    # x: 0.324255627929
+    # y: -9.66761901718e-06
+    # z: -0.0677773038967
+    # orientation: 
+    # x: -0.270612492885
+    # y: -0.653272615294
+    # z: -0.6532835679
+    # w: 0.270599979147
+
+
+    # import pdb;pdb.set_trace()
+    # move_group.set_pose_target(pose_goal)
+    move_group.set_position_target([0.324255627929, -9.66761901718e-06, -0.0677773038967])
 
     ## Now, we call the planner to compute the plan and execute it.
     plan = move_group.go(wait=True)
@@ -213,12 +235,16 @@ class MoveGroupPythonIntefaceTutorial(object):
     # Note: there is no equivalent function for clear_joint_value_targets()
     move_group.clear_pose_targets()
 
+
     ## END_SUB_TUTORIAL
 
     # For testing:
     # Note that since this section of code will not be included in the tutorials
     # we use the class variable rather than the copied state variable
     current_pose = self.move_group.get_current_pose().pose
+
+    print('Current joint values after go: \n', move_group.get_current_joint_values())
+    print('self.move_group.get_current_pose().pose after go\n', self.move_group.get_current_pose().pose)
     return all_close(pose_goal, current_pose, 0.01)
 
 
@@ -238,6 +264,7 @@ class MoveGroupPythonIntefaceTutorial(object):
     ##
     waypoints = []
 
+    import pdb;pdb.set_trace()
     wpose = move_group.get_current_pose().pose
     wpose.position.z -= scale * 0.1  # First move up (z)
     wpose.position.y += scale * 0.2  # and sideways (y)
@@ -322,25 +349,25 @@ def main():
     raw_input()
     tutorial = MoveGroupPythonIntefaceTutorial()
 
-    print "============ Press `Enter` to execute a movement using a joint state goal ..."
-    raw_input()
-    tutorial.go_to_joint_state()
+    # print "============ Press `Enter` to execute a movement using a joint state goal ..."
+    # raw_input()
+    # tutorial.go_to_joint_state()
 
     print "============ Press `Enter` to execute a movement using a pose goal ..."
     raw_input()
     tutorial.go_to_pose_goal()
 
-    print "============ Press `Enter` to plan and display a Cartesian path ..."
-    raw_input()
-    cartesian_plan, fraction = tutorial.plan_cartesian_path()
+    # print "============ Press `Enter` to plan and display a Cartesian path ..."
+    # raw_input()
+    # cartesian_plan, fraction = tutorial.plan_cartesian_path()
 
-    print "============ Press `Enter` to display a saved trajectory (this will replay the Cartesian path)  ..."
-    raw_input()
-    tutorial.display_trajectory(cartesian_plan)
+    # print "============ Press `Enter` to display a saved trajectory (this will replay the Cartesian path)  ..."
+    # raw_input()
+    # tutorial.display_trajectory(cartesian_plan)
 
-    print "============ Press `Enter` to execute a saved path ..."
-    raw_input()
-    tutorial.execute_plan(cartesian_plan)
+    # print "============ Press `Enter` to execute a saved path ..."
+    # raw_input()
+    # tutorial.execute_plan(cartesian_plan)
 
     print "============  complete!"
   except rospy.ROSInterruptException:
