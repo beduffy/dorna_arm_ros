@@ -431,6 +431,7 @@ if __name__ == "__main__":
     print(robot._config_path)
     robot.init(home=False)
     print(robot.set_param('motion', {'ct': 2.33444}))
+    robot.set_toolhead({"x": 80})
     
     
     

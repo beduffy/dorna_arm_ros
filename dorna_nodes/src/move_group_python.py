@@ -48,6 +48,8 @@ import moveit_commander
 import moveit_msgs.msg
 import geometry_msgs.msg
 from math import pi
+import math
+from math import radians
 from std_msgs.msg import String
 from moveit_commander.conversions import pose_to_list
 ## END_SUB_TUTORIAL
@@ -164,11 +166,11 @@ class MoveGroupPythonIntefaceTutorial(object):
     
     # import pdb;pdb.set_trace()
     joint_goal = move_group.get_current_joint_values()
-    joint_goal[0] = 0
-    joint_goal[1] = -pi/4
-    joint_goal[2] = 0
-    joint_goal[3] = -pi/2
-    joint_goal[4] = 0
+    joint_goal[0] = radians(-7.5946)
+    joint_goal[1] = radians(122.9755)
+    joint_goal[2] = radians(-129.76441)
+    joint_goal[3] = radians(76.7899)
+    joint_goal[4] = radians(0)
     # joint_goal[5] = pi/3
     # joint_goal[6] = 0
 
@@ -185,6 +187,8 @@ class MoveGroupPythonIntefaceTutorial(object):
 
     # For testing:
     current_joints = move_group.get_current_joint_values()
+    print('Current joint values after go: \n', current_joints)
+    print('Current joint values after go (radians): \n', [math.degrees(x) for x in current_joints])
     return all_close(joint_goal, current_joints, 0.01)
 
 
@@ -205,9 +209,12 @@ class MoveGroupPythonIntefaceTutorial(object):
     print('self.move_group.get_current_pose().pose\n', self.move_group.get_current_pose().pose)
     pose_goal = geometry_msgs.msg.Pose()
     pose_goal.orientation.w = 1.0
-    pose_goal.position.x = 400 / 1000.0
-    pose_goal.position.y = 0
-    pose_goal.position.z = 300 / 1000.0
+    # pose_goal.position.x = 400 / 1000.0
+    # pose_goal.position.y = 0
+    # pose_goal.position.z = 300 / 1000.0
+    pose_goal.position.x = 150.00002335 / 1000.0
+    pose_goal.position.y = -19.9998875562 / 1000.0
+    pose_goal.position.z = 400.000009622 / 1000.0
 
     # TODO: [ INFO] [1600618383.055231225]: ABORTED: No motion plan found. No execution attempted. 
     # WHY?
@@ -245,6 +252,7 @@ class MoveGroupPythonIntefaceTutorial(object):
     current_pose = self.move_group.get_current_pose().pose
 
     print('Current joint values after go: \n', move_group.get_current_joint_values())
+    print('Current joint values after go (radians): \n', [math.degrees(x) for x in move_group.get_current_joint_values()])
     print('self.move_group.get_current_pose().pose after go\n', self.move_group.get_current_pose().pose)
     return all_close(pose_goal, current_pose, 0.01)
 
@@ -351,8 +359,8 @@ def main():
     tutorial = MoveGroupPythonIntefaceTutorial()
 
     # print "============ Press `Enter` to execute a movement using a joint state goal ..."
-    # raw_input()
-    # tutorial.go_to_joint_state()
+    raw_input()
+    tutorial.go_to_joint_state()
 
     print "============ Press `Enter` to execute a movement using a pose goal ..."
     raw_input()

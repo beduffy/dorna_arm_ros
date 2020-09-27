@@ -3,3 +3,5 @@ dorna_ros/src/__pycache__/dorna_enums.cpython-36.pyc
 dorna_ros/src/__pycache__/dorna_exceptions.cpython-36.pyc
 dorna_ros/src/__pycache__/dorna_robot.cpython-36.pyc
 dorna_ros/src/__pycache__/dorna_tool_head.cpython-36.pyc
+
+*.pyc
