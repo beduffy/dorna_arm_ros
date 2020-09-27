@@ -205,9 +205,9 @@ class MoveGroupPythonIntefaceTutorial(object):
     print('self.move_group.get_current_pose().pose\n', self.move_group.get_current_pose().pose)
     pose_goal = geometry_msgs.msg.Pose()
     pose_goal.orientation.w = 1.0
-    pose_goal.position.x = 0.324255627929
-    pose_goal.position.y = -9.66761901718e-06
-    pose_goal.position.z = -0.0677773038967
+    pose_goal.position.x = 400 / 1000.0
+    pose_goal.position.y = 0
+    pose_goal.position.z = 300 / 1000.0
 
     # TODO: [ INFO] [1600618383.055231225]: ABORTED: No motion plan found. No execution attempted. 
     # WHY?
@@ -225,7 +225,8 @@ class MoveGroupPythonIntefaceTutorial(object):
 
     # import pdb;pdb.set_trace()
     # move_group.set_pose_target(pose_goal)
-    move_group.set_position_target([0.324255627929, -9.66761901718e-06, -0.0677773038967])
+    # move_group.set_position_target([0.324255627929, -9.66761901718e-06, -0.0677773038967])
+    move_group.set_position_target([pose_goal.position.x, pose_goal.position.y, pose_goal.position.z])
 
     ## Now, we call the planner to compute the plan and execute it.
     plan = move_group.go(wait=True)
